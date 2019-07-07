@@ -27,6 +27,10 @@ ADD docker-startup.sh /app/docker-startup.sh
 ADD target/*.yaml /app/
 ADD target/pay-*-allinone.jar /app/
 
+RUN java -Xshare:off -XX:DumpLoadedClassList=cds.lst -jar pay-*-allinone.jar -v \
+ && java -Xshare:dump -XX:SharedClassListFile=cds.lst -XX:SharedArchiveFile=cds.jsa -jar pay-*-allinone.jar \
+ && java -Xshare:on -XX:SharedClassListFile=cds.lst -XX:SharedArchiveFile=cds.jsa -jar pay-*-allinone.jar -v
+
 ENTRYPOINT ["tini", "-e", "143", "--"]
 
 CMD ["bash", "./docker-startup.sh"]

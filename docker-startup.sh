@@ -2,6 +2,7 @@
 
 set -eu
 
+JAVA_OPTS=${JAVA_OPTS:-} -Xshare:auto -XX:SharedClassListFile=cds.lst -XX:SharedArchiveFile=cds.jsa
 RUN_MIGRATION=${RUN_MIGRATION:-false}
 RUN_APP=${RUN_APP:-true}
 
@@ -15,12 +16,12 @@ if [ -n "${CERTS_PATH:-}" ]; then
   done
 fi
 
-java ${JAVA_OPTS:-} -jar *-allinone.jar waitOnDependencies *.yaml
+java $JAVA_OPTS -jar *-allinone.jar waitOnDependencies *.yaml
 
 if [ "$RUN_MIGRATION" == "true" ]; then
-  java ${JAVA_OPTS:-} -jar *-allinone.jar db migrate *.yaml
+  java $JAVA_OPTS -jar *-allinone.jar db migrate *.yaml
 fi
 
 if [ "$RUN_APP" == "true" ]; then
-  exec java ${JAVA_OPTS:-} -jar *-allinone.jar server *.yaml
+  exec java $JAVA_OPTS -jar *-allinone.jar server *.yaml
 fi

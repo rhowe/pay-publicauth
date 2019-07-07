@@ -5,4 +5,4 @@ set -e
 cd "$(dirname "$0")"
 
 mvn -DskipITs clean verify
-docker build -t govukpay/publicauth:local .
+docker build -t govukpay/publicauth:appcds .
